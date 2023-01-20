@@ -10,8 +10,8 @@ setup(
     packages=[],
     url='www.x5gon.org',
     license='',
-    authors=['Sahan Bulathwela', 'Rajan Chandale', 'Ravikkumar Thiruparan'],
-    authors_email=['m.bulathwela@ucl.ac.uk', 'thiruparan27@gmail.com', 'rajanchandale@gmail.com'],
+    authors=['Sahan Bulathwela', 'Rajan Chandale'],
+    authors_email=['m.bulathwela@ucl.ac.uk', 'rajanchandale@gmail.com'],
     description=("ADD DESCRIPTION"),
     install_requires=[
         'google-api-python-client>=1.8.4'
