@@ -1,8 +1,6 @@
 import psycopg2
 import sys
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 
 #connection parameters
 param_dic = {
@@ -129,16 +127,20 @@ def material_type_data(conn):
     return counts
 
 def typeprocess(typedata):
-    document = ["pptx","odp","docx","doc","html","txt"]
+    worddoc = ["pptx","doc","docx"]
+    other = ["odp","ods","html","txt"]
     vid = ["avi","divx","m4v","mov","mp3","rm","mpeg"]
-    data = [["other document",0],["video",0],["pdf"]]
+    data = [["presentation",0],["other",0],["video",0],["pdf",0]]
     for i in typedata:
-        if i[0] in document:
+        if i[0] in worddoc:
             data[0][1] = data[0][1] + i[1]
+        if i[0] in other:
+            data[1][1] = data[1][1] +  i[1]
         if i[0] in vid:
-            data[1][1] = data[1][1] + i[1]
-        if i[0] == "pdf":    
-            data[2].append(i[1])
+            data[2][1] = data[2][1] + i[1]
+        if i[0] == "pdf":
+            data[3][1] = i[1]
+        
     return data
 
 def vidprocess(typedata):
@@ -149,42 +151,22 @@ def vidprocess(typedata):
                 j.append(i[1])
     return vid
 
-def piechart(title,legtitle,categories,data):
-    
-    fig, ax = plt.subplots(figsize=(12, 6), subplot_kw=dict(aspect="equal"))
-
-    def func(pct, allvals):
-        absolute = int(np.round(pct/100.*np.sum(allvals)))
-        return "{:.1f}%".format(pct)
-    wedges, texts, autotexts = ax.pie(data, autopct=lambda pct: func(pct, data),textprops=dict(color="w"))
-
-    ax.legend(wedges, categories,
-            title= legtitle,
-            loc="center left",
-            bbox_to_anchor=(1, 0, 0.5, 1))
-
-    plt.setp(autotexts, size=12, weight="bold")
-
-    ax.set_title(title)
-
-    plt.show()
-    
-def display(title,leg,completedata):
-    languages = []
-    data = []
-    for i in completedata:
-        data.append(i[1])
-        languages.append(i[0])
-    piechart(title,leg,languages,data)
+def percentager(datalist):
+    sum = 0
+    for i in datalist:
+        sum += i[1]
+    pcts = map(lambda num: round(num[1]/sum *100,1),datalist)
+    temp =list(pcts)
+    for i in range(0,len(datalist)):
+        datalist[i]= (datalist[i][0],temp[i])
+    return datalist
 
 conn = connect(param_dic)
-langdata =language_data(conn)
+langdata =percentager(language_data(conn))
 rawtype= material_type_data(conn)
-typedata = typeprocess(rawtype)
-viddata = vidprocess(rawtype)
-browserdata = browserlang(conn)
-#display("languages of x5gon materials","languages",langdata)
-#display("type of materials","types",typedata)
-#display("video materials","file format",viddata)
-#display("User languages","languages",browserdata)
+typedata = percentager(typeprocess(rawtype))
+viddata = percentager(vidprocess(rawtype))
+browserdata = percentager(browserlang(conn))
+
+
 
