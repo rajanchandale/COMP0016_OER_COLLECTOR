@@ -47,12 +47,20 @@ def sqlstatement(cursor):
         cursor.close()
         return "error"
     nums = cursor.fetchall()
-    print(nums)
+    return nums
+
+def todictionary():
+    data =browser(conn)
+    arr = []
+    for i in data:
+        arr.append({"browser": i[1],"value": i[0]})
+    return arr
 
 def browser(conn):
     cursor = conn.cursor()
-    sqlstatement(cursor)
+    data = sqlstatement(cursor)
     cursor.close()
+    return data
 
 conn = connect(param_dic)
-browser(conn)
+todictionary()
