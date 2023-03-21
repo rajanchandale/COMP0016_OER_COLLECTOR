@@ -39,7 +39,7 @@ def user_lang_sql(cursor,langcode,language):
     return data
 
 #returns an array of dictionaries in the format {x:"language", y: int(number of users with that browser lang)}
-def user_language_data(conn):
+def user_language_data():
     datalist = []
     cursor = conn.cursor()
     data = user_lang_sql(cursor,"en","english")
@@ -75,7 +75,7 @@ def material_lang_sql(cursor,langcode,language):
     return data
 
 #returns an array of dictionaries in the format {x:"language", y: int(number of materials with that language )}
-def material_language_data(conn):
+def material_language_data():
     datalist = []
     languages = [("en","english"),("es","spanish"),("sl","slovinian"),("it","italian"),("zh","chinese"),("ru","russian")]
     cursor = conn.cursor()
@@ -90,3 +90,5 @@ def material_language_data(conn):
     datalist.append({"x":"other","y":other})
     cursor.close()
     return datalist
+
+conn = connect(param_dic)
