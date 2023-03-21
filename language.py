@@ -42,14 +42,10 @@ def user_lang_sql(cursor,langcode,language):
 def user_language_data():
     datalist = []
     cursor = conn.cursor()
-    data = user_lang_sql(cursor,"en","english")
-    datalist.append(data)
-    data = user_lang_sql(cursor,"es","spanish")
-    datalist.append(data)
-    data = user_lang_sql(cursor,"sl","slovenian")
-    datalist.append(data)
-    data = user_lang_sql(cursor,"it","italian")
-    datalist.append(data)
+    languages = [("en","english"),("es","spanish"),("sl","slovinian"),("it","italian"),("zh","chinese"),("ru","russian")]
+    for i in languages:
+        data = user_lang_sql(cursor,i[0],i[1])
+        datalist.append(data)
     total = user_lang_sql(cursor,"%","total")
     sum = 0
     for i in datalist:
