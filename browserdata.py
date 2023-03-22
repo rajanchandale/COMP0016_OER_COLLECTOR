@@ -100,4 +100,4 @@ def device_name_data():
     return data
 
 conn = connect(param_dic)
-#run device_name_data or user_name_data
+#run device_name_data or browser_name_data
