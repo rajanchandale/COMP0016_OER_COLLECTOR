@@ -38,6 +38,13 @@ def user_lang_sql(cursor,langcode,language):
     data = {"x":language,"y":num[0][0]}
     return data
 
+def piechart_colours(data):
+    colours = ["red","blue","green","yellow","orange","purple","teal"]
+    i = 0
+    for lang in data:
+        lang["colour"] = colours[i]
+        i+=1
+
 #returns an array of dictionaries in the format {x:"language", y: int(number of users with that browser lang)}
 def user_language_data():
     datalist = []
@@ -53,6 +60,7 @@ def user_language_data():
     other = total["y"] - sum
     datalist.append({"x":"other","y":other})
     cursor.close()
+    piechart_colours(datalist)
     return datalist
 
 
@@ -85,6 +93,7 @@ def material_language_data():
     other = total["y"] - sum
     datalist.append({"x":"other","y":other})
     cursor.close()
+    piechart_colours(datalist)
     return datalist
 
 conn = connect(param_dic)
