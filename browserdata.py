@@ -23,21 +23,25 @@ def connect(params_dic):
     print("Connection successful")
     return conn
 
-def sqlstatement(cursor):
+#changes data to an array of dictionaries for the react front end
+def todictionary(data):
+    arr = []
+    for i in data:
+        arr.append({"x": i[1],"y": i[0]})
+    return arr
+
+#helper function for browser_name_data
+def browser_name_sql(cursor):
     try:
         cursor.execute("""
         Select count(id), Browser
         From
         (Select id, user_agent,
         CASE
-                WHEN user_agent LIKE '%edge%'THEN ' Edge'
                 WHEN user_agent LIKE '%MSIE%' THEN 'Internet Explorer'
                 WHEN user_agent LIKE '%Firefox%' THEN 'Mozilla Firefox'
                 WHEN user_agent LIKE '%Chrome%' THEN ' Google Chrome'
                 WHEN user_agent LIKE '%Safari%' THEN ' Apple Safari'
-                WHEN user_agent LIKE '%Opera%' THEN ' Opera' 
-                WHEN user_agent LIKE '%Outlook%' THEN 'Outlook' 
-                ELSE 'Unknown'
         END AS Browser
         FROM cookies) as t1
         Group by Browser
@@ -49,18 +53,51 @@ def sqlstatement(cursor):
     nums = cursor.fetchall()
     return nums
 
-def todictionary():
-    data =browser(conn)
-    arr = []
-    for i in data:
-        arr.append({"browser": i[1],"value": i[0]})
-    return arr
-
-def browser(conn):
+#returns an array of dictionaries 
+#in the format {"name":"browser name", "value":int(number of users using that browser)}
+def browser_name_data():
     cursor = conn.cursor()
-    data = sqlstatement(cursor)
+    num =browser_name_sql(cursor)
+    num.pop() #discard data which does not match browser names
     cursor.close()
+    data = todictionary(num)
+    return data
+
+
+#helper function for device_name_data
+def device_name_sql(cursor):
+    try:
+        cursor.execute("""
+        Select count(id), Device
+        From
+        (Select id, user_agent,
+        CASE
+            WHEN user_agent LIKE '%(Mac%' Then 'macbook'
+            WHEN user_agent LIKE '%iPad%' THEN 'iPad'
+            WHEN user_agent LIKE '%iPhone%' THEN  'iPhone'
+            WHEN user_agent LIKE '%Android%' THEN 'android'
+            WHEN user_agent LIKE '%(Linux%' THEN 'linux'
+            WHEN user_agent LIKE '%(Win%' THEN 'windows'
+        END AS Device
+        FROM cookies) as t1
+        Group by Device
+        """)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error: %s" % error)
+        cursor.close()
+        return "error"
+    nums = cursor.fetchall()
+    return nums
+
+#returns an array of dictionaries 
+#in the format {"name":"device/os name", "value":int(number of users with that device)}
+def device_name_data():
+    cursor = conn.cursor()
+    num =device_name_sql(cursor)
+    num.pop()
+    cursor.close()
+    data = todictionary(num)
     return data
 
 conn = connect(param_dic)
-todictionary()
+#run device_name_data or user_name_data
