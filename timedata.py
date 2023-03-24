@@ -75,7 +75,8 @@ def users_month_data():
     num = users_month_sql(cursor,d,m,y)
     day =1
     for i in num:
-        visitors.append({"x":str(day)+"/"+str(m),"y":i[0]})
+        date = datetime.datetime(y,m,day)
+        visitors.append({"x":datetime,"y":i[0]})
         day +=1
     cursor.close()
     return visitors
