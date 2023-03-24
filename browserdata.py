@@ -24,10 +24,16 @@ def connect(params_dic):
     return conn
 
 #changes data to an array of dictionaries for the react front end
-def todictionary(data):
+def todictionary(data,expand):
     arr = []
-    for i in data:
-        arr.append({"x": i[1],"y": i[0]})
+    if expand:
+        for i in data:
+            name = i[1].split()
+            arr.append({"x":name[1],"expandedx":i[1],"y": i[0]})
+    else expand:
+        for i in data:
+            name = i[1].split()
+            arr.append({"x":i[1],"expandedx":i[1],"y": i[0]})
     return arr
 
 #helper function for browser_name_data
@@ -60,7 +66,7 @@ def browser_name_data():
     num =browser_name_sql(cursor)
     num.pop() #discard data which does not match browser names
     cursor.close()
-    data = todictionary(num)
+    data = todictionary(num,True)
     return data
 
 
@@ -96,7 +102,7 @@ def device_name_data():
     num =device_name_sql(cursor)
     num.pop()
     cursor.close()
-    data = todictionary(num)
+    data = todictionary(num,False)
     return data
 
 conn = connect(param_dic)
