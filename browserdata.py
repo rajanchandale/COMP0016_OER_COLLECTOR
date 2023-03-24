@@ -30,7 +30,7 @@ def todictionary(data,expand):
         for i in data:
             name = i[1].split()
             arr.append({"x":name[1],"expandedx":i[1],"y": i[0]})
-    else expand:
+    else:
         for i in data:
             name = i[1].split()
             arr.append({"x":i[1],"expandedx":i[1],"y": i[0]})
