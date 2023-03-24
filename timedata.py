@@ -48,7 +48,7 @@ def users_month_sql(cursor,d,m,y):
     num = cursor.fetchall()
     return num
 
-def users_week_data(conn):
+def users_week_data():
     visitors = []
     days = []
     current = datetime.datetime(2018,6,1)
@@ -65,7 +65,7 @@ def users_week_data(conn):
     cursor.close()
     return visitors
 
-def users_month_data(conn):
+def users_month_data():
     visitors = []
     current = datetime.datetime(2018,6,1)
     cursor = conn.cursor()
