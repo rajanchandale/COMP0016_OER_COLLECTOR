@@ -82,8 +82,6 @@ def users_month_data():
     return visitors
 
 
-
 conn = connect(param_dic)
-nums = users_month_data(conn)
-print(nums)
+
 
