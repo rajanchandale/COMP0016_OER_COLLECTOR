@@ -39,7 +39,7 @@ def user_lang_sql(cursor,langcode,language):
     return data
 
 def piechart_colours(data):
-    colours = ["red","blue","green","yellow","orange","purple","teal"]
+    colours = ["#63C1BD","#D36135","#304C89","#F7C548","#3A5A40","#ABDAFC","#A24936"]
     i = 0
     for lang in data:
         lang["colour"] = colours[i]
