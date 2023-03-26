@@ -22,17 +22,39 @@ def connect(params_dic):
     print("Connection successful")
     return conn
 
-def sqlstatement(cursor,d,m,y):
+def users_week_sql(cursor,d1,m1,y1,d2,m2,y2):
     try:
-        cursor.execute((f"""select count(distinct cookie_id)
-        from user_activities
-        WHERE timestamp BETWEEN '20{y}-{m:02d}-{d} 00:00:00' AND '20{y}-{m:02d}-{d} 23:59:59';"""))
+        cursor.execute((f"""Select count(distinct(cookie_id)), mydate
+        From (SELECT cookie_id,date(timestamp) AS MYDATE
+        FROM user_activities
+        where timestamp between '20{y1}-{m1:02d}-{d1}' and '20{y2}-{m2:02d}-{d2}') as t1
+        group by mydate"""))
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error: %s" % error)
         cursor.close()
         return "error"
     num = cursor.fetchall()
-    return num[0][0]
+    return num
+
+#line graph
+def users_week_data(conn):
+    visitors = []
+    current = datetime.date(2018,3,15)
+    weeklater = current + datetime.timedelta(7)
+    cursor = conn.cursor()
+    d1 = int(current.strftime("%d"))
+    m1 = int(current.strftime("%m"))
+    y1 = int(current.strftime("%y"))
+    d2 = int(weeklater.strftime("%d"))
+    m2 = int(weeklater.strftime("%m"))
+    y2 = int(weeklater.strftime("%y"))
+    nums = users_week_sql(cursor,d1,m1,y1,d2,m2,y2)
+    for record in nums:
+        date = record[1]
+        d = date.strftime("%d")
+        m = date.strftime("%m")
+        visitors.append({"x":d+"/"+m,"y":record[0]})
+    return visitors
 
 def users_month_sql(cursor,d,m,y):
     try:
@@ -48,26 +70,10 @@ def users_month_sql(cursor,d,m,y):
     num = cursor.fetchall()
     return num
 
-def users_week_data():
+#line graph
+def users_month_data(conn):
     visitors = []
-    days = []
-    current = datetime.datetime(2018,6,1)
-    cursor = conn.cursor()
-    for i in range(1,8):
-        lastweek = current - timedelta(i)
-        days.append(lastweek.strftime("%x"))
-        d = int(lastweek.strftime("%d"))
-        m = int(lastweek.strftime("%m"))
-        y = int(lastweek.strftime("%y"))
-        num = sqlstatement(cursor,d,m,y)
-        date = str(d)+"/"+str(m)
-        visitors.append({"x":date,"y":num})
-    cursor.close()
-    return visitors
-
-def users_month_data():
-    visitors = []
-    current = datetime.datetime(2018,6,1)
+    current = datetime.date(2018,6,1)
     cursor = conn.cursor()
     d = int(current.strftime("%d"))
     m = int(current.strftime("%m"))
@@ -75,13 +81,12 @@ def users_month_data():
     num = users_month_sql(cursor,d,m,y)
     day =1
     for i in num:
-        date = datetime.datetime(y,m,day)
-        visitors.append({"x":datetime,"y":i[0]})
+        visitors.append({"x":str(day)+"/"+str(m),"y":i[0]})
         day +=1
     cursor.close()
     return visitors
 
-
 conn = connect(param_dic)
+
 
 
