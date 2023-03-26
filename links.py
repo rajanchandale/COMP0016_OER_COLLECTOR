@@ -1,5 +1,6 @@
 import psycopg2
 import sys
+from urllib.parse import urlparse
 
 param_dic = {
     "host"      : "localhost",
@@ -62,9 +63,10 @@ def id_url_sql(cursor,id):
         cursor.close()
         return "error"
     nums = cursor.fetchall()
-    return nums
+    #readable = urlparse(nums[0][0]).netloc
+    return nums[0][0]
 
-def process():
+def process(conn):
     pairs = {}
     cursor = conn.cursor()
     cookies = sqlstatement(cursor)
@@ -84,18 +86,21 @@ def process():
     cursor.close()
     sorted_pairs = sorted(pairs.items(), key=lambda x:x[1])
     final = []
+    cursor = conn.cursor()
     for i in range(15):
         link = sorted_pairs.pop()
         source = link[0][0]
         target = link[0][1]
-        a=id_url_sql(source)
-        b=id_url_sql(target)
+        a=id_url_sql(cursor,source)
+        b=id_url_sql(cursor,target)
         final.append({"source":a,"target":b,"value":link[1]})
-        break
-    print(final)
+    cursor.close()
+    #print(final)
     return(final)
     
         
 conn = connect(param_dic)
 process(conn)
+
+
 
