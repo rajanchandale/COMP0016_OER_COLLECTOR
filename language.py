@@ -96,4 +96,17 @@ def material_language_data():
     piechart_colours(datalist)
     return datalist
 
+#list of dictionaries in format {x:language,y1:num of users,y2:num of materials}
+#double ended barchart
+def compare_language_data():
+    datalist = []
+    languages = [("en","english"),("es","spanish"),("sl","slovinian"),("it","italian"),("zh","chinese"),("ru","russian")]
+    cursor = conn.cursor()
+    for i in languages:
+        user = user_lang_sql(cursor,i[0],i[1])
+        material = material_lang_sql(cursor,i[0],i[1])
+        datalist.append({"x":user["x"],"y1":user["y"],"y2":material["y"]})
+    cursor.close()
+    return datalist
+
 conn = connect(param_dic)
