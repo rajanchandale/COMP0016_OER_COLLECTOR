@@ -64,7 +64,7 @@ def id_url_sql(cursor,id):
     nums = cursor.fetchall()
     return nums
 
-def process(conn):
+def process():
     pairs = {}
     cursor = conn.cursor()
     cookies = sqlstatement(cursor)
