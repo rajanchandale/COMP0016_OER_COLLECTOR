@@ -39,7 +39,7 @@ def users_week_sql(cursor,d1,m1,y1,d2,m2,y2):
 #line graph
 def users_week_data(conn):
     visitors = []
-    current = datetime.date(2018,3,15)
+    current = datetime.date(2018,6,1)
     weeklater = current + datetime.timedelta(7)
     cursor = conn.cursor()
     d1 = int(current.strftime("%d"))
