@@ -96,7 +96,7 @@ def material_language_data():
     piechart_colours(datalist)
     return datalist
 
-
+#double bar chart
 def compare_language_data():
     datalist = []
     languages = [("en","english"),("es","spanish"),("sl","slovinian"),("it","italian"),("zh","chinese"),("ru","russian")]
