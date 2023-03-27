@@ -40,7 +40,7 @@ def material_type_process(typedata):
     worddoc = ["pptx","doc","docx"]
     textfile = ["html","txt"]
     vid = ["avi","divx","m4v","mov","mp3","rm","mpeg"]
-    data = [{"name":"microsoft", "value":0, "color":"green"},{"name":"textfile","value":0, "color":"red"},{"name":"video","value":0,"color":"yellow"},{"name":"pdf", "value":0,"color":"blue"}]
+    data = [{"name":"microsoft", "value":0, "color":"#63C1BD"},{"name":"textfile","value":0, "color":"#D36135"},{"name":"video","value":0,"color":"F7C548"},{"name":"pdf", "value":0,"color":"ABDAFC"}]
     for i in typedata:
         if i[0] in worddoc:
             data[0]["value"] = data[0]["value"] + i[1]
@@ -85,7 +85,7 @@ def vid_process(typedata):
         if i[0] in vid:
             vid[i[0]] = i[1]
     dictlist = [{"name":key,"value":value} for key, value in vid.items()]
-    colours = ["orange","blue","yellow","green","purple"]
+    colours = ["#63C1BD","#D36135","#304C89","#F7C548","#3A5A40"]
     j =0
     for i in dictlist:
         i["color"] = colours[j]
