@@ -86,6 +86,30 @@ def users_month_data(conn):
     cursor.close()
     return visitors
 
+#double bar chart
+#in format {x:date, y1: june 2018 users, y2: jan 2019 users}
+def compare_months_data():
+    visitors = []
+    month1 = datetime.date(2018,6,1)
+    month2= datetime.date(2019,1,1)
+    cursor = conn.cursor()
+    d = int(month1.strftime("%d"))
+    m = int(month1.strftime("%m"))
+    y = int(month1.strftime("%y"))
+    num = users_month_sql(cursor,d,m,y)
+    d = int(month2.strftime("%d"))
+    m = int(month2.strftime("%m"))
+    y = int(month2.strftime("%y"))
+    num2 = users_month_sql(cursor,d,m,y)
+    print(num2)
+    day =1
+    for i in num:
+        visitors.append({"x":str(day),"y1":i[0],"y2":num2[day-1][0]})
+        day +=1
+    cursor.close()
+    return visitors
+
+
 conn = connect(param_dic)
 
 
