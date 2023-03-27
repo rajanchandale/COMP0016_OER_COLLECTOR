@@ -82,7 +82,6 @@ def device_name_sql(cursor):
             WHEN user_agent LIKE '%iPad%' THEN 'iPad'
             WHEN user_agent LIKE '%iPhone%' THEN  'iPhone'
             WHEN user_agent LIKE '%Android%' THEN 'android'
-            WHEN user_agent LIKE '%(Linux%' THEN 'linux'
             WHEN user_agent LIKE '%(Win%' THEN 'windows'
         END AS Device
         FROM cookies) as t1
