@@ -39,7 +39,7 @@ def user_lang_sql(cursor,langcode,language):
     return data
 
 def piechart_colours(data):
-    colours = ["#63C1BD","#D36135","#304C89","#F7C548","#3A5A40","#ABDAFC","#AF4129"]
+    colours = ["#63C1BD","#D36135","#304C89","#F7C548","#3A5A40","#ABDAFC","#A24936"]
     i = 0
     for lang in data:
         lang["colour"] = colours[i]
@@ -56,8 +56,8 @@ def user_language_data():
     total = user_lang_sql(cursor,"%","total")
     sum = 0
     for i in datalist:
-        sum = sum + i["y"]
-    other = total["y"] - sum
+        sum = sum + i["value"]
+    other = total["value"] - sum
     datalist.append({"name":"other","value":other})
     cursor.close()
     piechart_colours(datalist)
@@ -89,15 +89,14 @@ def material_language_data():
     total = material_lang_sql(cursor,"%","total")
     sum = 0
     for i in datalist:
-        sum = sum + i["y"]
-    other = total["y"] - sum
+        sum = sum + i["value"]
+    other = total["value"] - sum
     datalist.append({"name":"other","value":other})
     cursor.close()
     piechart_colours(datalist)
     return datalist
 
-#list of dictionaries in format {x:language,y1:num of users,y2:num of materials}
-#double ended barchart
+
 def compare_language_data():
     datalist = []
     languages = [("en","english"),("es","spanish"),("sl","slovinian"),("it","italian"),("zh","chinese"),("ru","russian")]
@@ -105,8 +104,9 @@ def compare_language_data():
     for i in languages:
         user = user_lang_sql(cursor,i[0],i[1])
         material = material_lang_sql(cursor,i[0],i[1])
-        datalist.append({"x":user["x"],"y1":user["y"],"y2":material["y"]})
+        datalist.append({"name":user["name"],"value1":user["value"],"value2":material["value"]})
     cursor.close()
     return datalist
 
 conn = connect(param_dic)
+print(material_language_data())
