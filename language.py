@@ -96,17 +96,35 @@ def material_language_data():
     piechart_colours(datalist)
     return datalist
 
-#double bar chart
+def percentager(datalist):
+    sum = 0
+    for i in datalist:
+        sum += i[1]
+    pcts = map(lambda num: round(num[1]/sum *100,1),datalist)
+    temp =list(pcts)
+    for i in range(0,len(datalist)):
+        datalist[i]= (datalist[i][0],temp[i])
+    return datalist
+
 def compare_language_data():
-    datalist = []
+    finallist = []
+    datalist1 = []
+    datalist2 = []
     languages = [("en","english"),("es","spanish"),("sl","slovinian"),("it","italian"),("zh","chinese"),("ru","russian")]
     cursor = conn.cursor()
     for i in languages:
         user = user_lang_sql(cursor,i[0],i[1])
         material = material_lang_sql(cursor,i[0],i[1])
-        datalist.append({"name":user["name"],"value1":user["value"],"value2":material["value"]})
+        datalist1.append((user["name"],user["value"]))
+        datalist2.append((material["name"],material["value"]))
     cursor.close()
-    return datalist
+    dl1 = percentager(datalist1)
+    dl2 = percentager(datalist2)
+    j = 0
+    for i in languages:
+        finallist.append({"name":user["name"],"value1":dl1[j][1],"value2":dl2[j][1]})
+        j +=1
+    return finallist
 
 conn = connect(param_dic)
-print(material_language_data())
+
