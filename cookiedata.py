@@ -21,7 +21,7 @@ def connect(params_dic):
     print("Connection successful")
     return conn
 
-def sqlstatement(cursor, bandstart, bandend):
+def sqlstatement(cursor, num):
     try:      
         cursor.execute(f"""Select sum(count)
             From(Select t1.count as event, count(t1.count)
@@ -30,7 +30,7 @@ def sqlstatement(cursor, bandstart, bandend):
             Group By Cookie_id) as t1
             Group By t1.count
             order By event) as t2
-            Where event > {bandstart} and event < {bandend}""")
+            Where event = {num}""")
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error: %s" % error)
         cursor.close()
@@ -45,13 +45,13 @@ def sqlstatement(cursor, bandstart, bandend):
 def eventcount():
     final = []
     cursor = conn.cursor()
-    for i in range(0,10):
-        start = i*10
-        end = (i+1)*10
-        data  = sqlstatement(cursor,start,end)
-        final.append({"x":f"{start}-{end}","y":data})
+    for i in range(1,16):
+        num = i
+        data  = sqlstatement(cursor,num)
+        final.append({"x":num,"y":data})
     cursor.close()
     return final
 
 
 conn = connect(param_dic)
+
