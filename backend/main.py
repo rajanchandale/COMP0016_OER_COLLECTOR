@@ -1,18 +1,13 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
-from scraping_subsystem.youtube_scraper import Scraper
-from scraping_subsystem.youtube_video import YouTubeVideo
-from scraping_subsystem.youtube_playlists import YoutubePlaylists
+from backend.scraping_subsystem.youtube_scraper import Scraper
+from backend.scraping_subsystem.youtube_video import YouTubeVideo
+from backend.scraping_subsystem.youtube_playlists import YoutubePlaylists
 
-import browserdata
-import language
-import typedata
-import cookiedata
-import timedata
-import links
+from backend.analytics import timedata, browserdata, cookiedata, language, links, typedata
 
-from licence import LicenceTool
+from backend.analytics.licence import LicenceTool
 
 app = FastAPI()
 
