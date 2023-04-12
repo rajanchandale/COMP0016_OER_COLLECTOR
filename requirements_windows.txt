@@ -1,0 +1,6 @@
+psycopg2
+google-api-python-client
+youtube_transcript_api
+urllib3
+fastapi
+uvicorn
