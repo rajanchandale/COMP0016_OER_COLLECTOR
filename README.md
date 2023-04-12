@@ -86,11 +86,11 @@ Create a terminal session and navigate to the directory titled backend
 
 If you are using a windows machine, you can download the required Python libraries by running the following command:
 
-```pip3 install requirements_windows.txt```
+```pip3 install -r requirements_windows.txt```
 
 If you are using a Mac or Linux machine, you can download the required Python libraries by running the following command:
 
-```pip3 install requirements_mac_linux.txt```
+```pip3 install -r requirements_mac_linux.txt```
 
 Node JS is a pre-requisite for this project and can be installed from the following link
 
@@ -130,6 +130,8 @@ COMP0016 OER_COLLECTOR
 | |
 | |--- licence.py
 | |--- main.py
+| |--- requirements_windows.txt
+| |--- requirements_mac_linux.txt
 |
 |--- frontend
 | |--- node_modules
@@ -174,9 +176,6 @@ COMP0016 OER_COLLECTOR
 | |
 | |--- package.json
 | |--- package-lock.json
-|
-|--- requirements_windows.txt
-|--- requirements_mac_linux.txt
 ```
 
 The set-up is now complete and you are ready to run the project
@@ -195,6 +194,10 @@ The frontend should now be running on
 ```http://localhost:3000/```
 
 ### Back-End Deployment
+If you have access to the X5Gon database, replace the placeholders in all python files in the analytics sub-directory for the database login credentials with your own login credentials
+
+If you have an API-Key for the YoutubeAPI v3, replace the placeholder for self.api_key in the youtube_master.py file with your own developer API Key
+
 In a new terminal session navigate to the directory titled backend
 
 ```cd backend```
