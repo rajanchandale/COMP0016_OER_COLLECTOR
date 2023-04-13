@@ -8,6 +8,8 @@ Collective GitHub Repo for Systems Engineering OER Collector Project (Team Two)
 - [Set-up](#set-up)
 - [Front-End Deployment](#front-end-deployment)
 - [Back-End Deployment](#back-end-deployment)
+- [Contributors](#contributors)
+- [Licence](#licence)
 
 ### Set-Up
 
