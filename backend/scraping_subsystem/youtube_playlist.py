@@ -7,9 +7,9 @@ class YoutubePlaylists(YoutubeMaster):
     def __init__(self):
         YoutubeMaster.__init__(self)
 
-    def get_all_playlist_ids_by_channel_id(self, channel_id):
+    def get_all_playlist_ids_by_channel_id(self, channel_id, api_key):
         youtube = googleapiclient.discovery.build(self.youtube_api_service_name, self.youtube_api_version,
-                                                  developerKey=self.api_key)
+                                                  developerKey=api_key)
         playlist_data = []
         next_page_token = None
         while True:
@@ -51,9 +51,9 @@ class YoutubePlaylists(YoutubeMaster):
 
         return video_ids
 
-    def get_playlist_info(self, playlist_id):
+    def get_playlist_info(self, playlist_id, api_key):
         youtube = googleapiclient.discovery.build(self.youtube_api_service_name, self.youtube_api_version,
-                                                  developerKey=self.api_key)
+                                                  developerKey=api_key)
         playlist_info = youtube.playlists().list(part=self.snippet+','+self.content_details,
                                                  id=playlist_id).execute()
 
