@@ -199,7 +199,9 @@ The frontend should now be running on
 
 If you have access to the X5Gon database, replace the placeholders in all python files in the analytics sub-directory for the database login credentials with your own login credentials
 
-You should also add a new record into the 'providers' table in the X5Gon database to allow for correct ingestion of materials. 
+You should also add a new record into the 'providers' table in the X5Gon database to allow for correct ingestion of materials. An example INSERT statement of how this may be achieved: 
+
+```INSERT INTO providers(name, domain) VALUES ('YouTube','https://www.youtube.com/')```
 
 You may have to adjust the provider id in the program to match the provider id generated for your new YouTube record. 
 
