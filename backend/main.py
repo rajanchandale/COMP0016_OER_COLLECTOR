@@ -26,35 +26,19 @@ app.add_middleware(
 
 @app.get('/general_statistics/')
 def general_statistics() -> dict:
-    print("ANALYSING")
-
     user_browser_data = browserdata.browser_name_data()
-
-    print("USER_BROWSER_DATA: ", user_browser_data)
 
     material_language_data = language.material_language_data()
 
-    print("MATERIAL_LANGUAGE_DATA: ", material_language_data)
-
     user_language_data = language.user_language_data()
-
-    print("USER_LANGUAGE_DATA: ", user_language_data)
 
     material_type_data = typedata.material_type_data()
 
-    print("MATERIAL_TYPE_DATA: ", material_type_data)
-
     device_name_data = browserdata.device_name_data()
-
-    print("DEVICE NAME DATA: ", device_name_data)
 
     video_type_data = typedata.vid_type_data()
 
-    print("VIDEO TYPE DATA: ", video_type_data)
-
     language_comparison_data = language.compare_language_data()
-
-    print("LANGUAGE COMPARISON DATA: ", language_comparison_data)
 
     general_data = {
         "user_browser": user_browser_data,
@@ -66,35 +50,21 @@ def general_statistics() -> dict:
         "language_comparison_data": language_comparison_data
     }
 
-    print("DONE ANALYSING")
-
     return {"data": general_data}
 
 
 @app.get('/activity_statistics/')
 def activity_statistics() -> dict:
 
-    print("ANALYSING ACTIVITY STATISTICS")
-
     users_week_data = timedata.users_week_data()
-
-    print("USERS WEEK DATA DONE")
 
     users_month_data = timedata.users_month_data()
 
-    print("USERS MONTH DATA DONE")
-
     cookie_events_data = cookiedata.eventcount()
-
-    print("COOKIE EVENTS DATA DONE")
 
     month_comparison_data = timedata.compare_months_data()
 
-    print("MONTH COMPARISON DATA DONE")
-
     links_between_materials = links.process()
-
-    print("LINKS BETWEEN MATERIALS DONE")
 
     activity_data = {
         "cookie_events_data": cookie_events_data,
@@ -103,8 +73,6 @@ def activity_statistics() -> dict:
         "links_between_materials": links_between_materials,
         "month_comparison_data": month_comparison_data
     }
-
-    print("ANALYSIS COMPLETE")
 
     return {"data": activity_data}
 
@@ -122,10 +90,14 @@ async def add_materials(request: Request) -> dict:
             video_metadata = youtube_video.get_video_info(scraper.get_video_id(json['url']), scraper.api_key)
             scraper.ingest_material_video(video_metadata)
 
-            return {"data": scraper.get_oer_id(json['url'])}
+            print(scraper.get_oer_id(json['url']))
+            if video_metadata is None:
+                return {"data": "Invalid URL"}
+            else:
+                return {"data": scraper.get_oer_id(json['url'])}
 
         except Exception as e:
-            return {"data": "Invalid JSON data"}
+            return {"data": "Invalid URL"}
 
 
 @app.get("/add_materials/playlists/{oer_id}/")
@@ -136,7 +108,7 @@ async def view_playlist_materials(oer_id: str) -> dict:
 
 
 @app.post('/ingest_playlists/{oer_id}/')
-async def ingest_playlists(request: Request, oer_id: str ) -> dict:
+async def ingest_playlists(request: Request, oer_id: str) -> dict:
     content_type = request.headers.get('Content-Type')
 
     if content_type is None:
@@ -152,12 +124,7 @@ async def ingest_playlists(request: Request, oer_id: str ) -> dict:
 
             playlist_ids = youtube_playlists.get_all_playlist_ids_by_channel_id(channel_id, scraper.api_key)
 
-            print("PLAYLIST IDs: ", playlist_ids)
-
-            print("LENGTH = ")
-
             for playlist_id in playlist_ids:
-                print("INGESTING A PLAYLIST")
                 playlist_info = youtube_playlists.get_playlist_info(playlist_id, scraper.api_key)
                 scraper.ingest_series(playlist_info)
 
@@ -220,12 +187,10 @@ async def licensing_tool(request: Request) -> dict:
     elif content_type == "application/json":
         try:
             json = await request.json()
-            print("JSON: ", json)
             licence_tool = LicenceTool()
             acceptable_licences = licence_tool.licences(json)
             return {"data": acceptable_licences}
 
         except Exception as e:
-            print(e)
             return {"data": "Invalid JSON data"}
 
