@@ -2,15 +2,14 @@ from scraping_subsystem.youtube_master import YoutubeMaster
 
 import googleapiclient.discovery
 import googleapiclient.errors
-from youtube_transcript_api import YouTubeTranscriptApi
-
 
 class YoutubePlaylists(YoutubeMaster):
     def __init__(self):
         YoutubeMaster.__init__(self)
 
-    def get_all_playlist_ids_by_channel_id(self, channel_id, api_key):
-        youtube = googleapiclient.discovery.build(self.youtube_api_service_name, self.youtube_api_version, developerKey = self.api_key)
+    def get_all_playlist_ids_by_channel_id(self, channel_id):
+        youtube = googleapiclient.discovery.build(self.youtube_api_service_name, self.youtube_api_version,
+                                                  developerKey=self.api_key)
         playlist_data = []
         next_page_token = None
         while True:
@@ -30,8 +29,9 @@ class YoutubePlaylists(YoutubeMaster):
 
         return playlist_ids
 
-    def get_all_video_ids_in_a_playlist(self, playlist_id, api_key):
-        youtube = googleapiclient.discovery.build(self.youtube_api_service_name, self.youtube_api_version, developerKey=self.api_key)
+    def get_all_video_ids_in_a_playlist(self, playlist_id):
+        youtube = googleapiclient.discovery.build(self.youtube_api_service_name, self.youtube_api_version,
+                                                  developerKey=self.api_key)
         videos = []
         next_page_token = None
         while True:
@@ -51,8 +51,9 @@ class YoutubePlaylists(YoutubeMaster):
 
         return video_ids
 
-    def get_playlist_info(self, playlist_id, api_key):
-        youtube = googleapiclient.discovery.build(self.youtube_api_service_name, self.youtube_api_version, developerKey=api_key)
+    def get_playlist_info(self, playlist_id):
+        youtube = googleapiclient.discovery.build(self.youtube_api_service_name, self.youtube_api_version,
+                                                  developerKey=self.api_key)
         playlist_info = youtube.playlists().list(part=self.snippet+','+self.content_details,
                                                  id=playlist_id).execute()
 
