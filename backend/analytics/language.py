@@ -1,13 +1,12 @@
 import psycopg2
 import sys
-import pandas as pd
 
 # connection parameters
 param_dic = {
     "host": "localhost",
-    "database": "postgres",
-    "user": "postgres",
-    "password": "Incorrect-10"
+    "database": "x5gon",
+    "user": "<example_username>",
+    "password": "<example_password>"
 }
 
 
