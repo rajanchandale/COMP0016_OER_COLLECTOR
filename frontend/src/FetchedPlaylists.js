@@ -4,15 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 const FetchedPlaylists = () => {
 
     const { oer_id } = useParams();
-    const[playlistData, setPlaylistData] = useState([]);
-    const[deletedData, setDeletedData] = useState([]);
-    const[isPending, setIsPending] = useState(true);
-    const[isIngesting, setIsIngesting] = useState(false);
-    const[isFetching, setIsFetching] = useState(true);
+    const [playlistData, setPlaylistData] = useState([]);
+    const [deletedData, setDeletedData] = useState([]);
+    const [isPending, setIsPending] = useState(true);
+    const [isIngesting, setIsIngesting] = useState(false);
+    const [isFetching, setIsFetching] = useState(true);
     const navigate = useNavigate();
-
-    console.log("FetchedPlaylists Component Rendered")
-    console.log("OER_ID: ", oer_id)
 
     const groupVideosByPlaylist = (videos) => {
         return videos.reduce((acc, video) => {
@@ -34,7 +31,6 @@ const FetchedPlaylists = () => {
     }
 
     useEffect(() => {
-        console.log("Fetching Data in useEffect")
         fetch(`http://localhost:8000/add_materials/playlists/${oer_id}`).then(res => res.json()).then(data => {
             setPlaylistData(Object.entries(data.data).map(([key, value]) => {
                 return {
@@ -45,16 +41,7 @@ const FetchedPlaylists = () => {
         }).then(() => {setIsPending(false);setIsFetching(false);}).catch(e => console.log(e.message));
     }, [oer_id]);
 
-    console.log(playlistData)
-    console.log(typeof(playlistData))
-
-    const deleteMaterial = (event, deleted_data) => {
-        console.log(event)
-        const newData = playlistData.filter(video => video[1]['id'] !== deleted_data[1]['id']);
-        setPlaylistData(newData);
-    }
-
-    const deleteMaterial2 = (event, video) => {
+    const deleteMaterial = (event, video) => {
         console.log(event);
         setPlaylistData(
             playlistData.map(v => {
@@ -116,13 +103,13 @@ const FetchedPlaylists = () => {
                                     <div className="delete-button-container">
                                         {!video.deleted ? (
                                         <button
-                                            onClick={(event) => deleteMaterial2(event, video)}
+                                            onClick={(event) => deleteMaterial(event, video)}
                                             style={{ transform: "rotate(45deg)" }}
                                         >
                                           +
                                         </button>
                                         ) : video.licence_available !== "Private Video" ? (
-                                            <button onClick={(event) => deleteMaterial2(event, video)}>
+                                            <button onClick={(event) => deleteMaterial(event, video)}>
                                                 <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 50 50"
