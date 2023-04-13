@@ -29,7 +29,7 @@ class Scraper(YoutubeMaster):
         elif 'youtu.be' in query.hostname:
             return query.path[1:]
         else:
-            raise ValueError
+            return "Invalid URL"
 
     def get_channel_id(self, url):
         video_id = self.get_video_id(url)
@@ -54,11 +54,11 @@ class Scraper(YoutubeMaster):
 
     def get_oer_id(self, url):
         try:
-            connection = psycopg2.connect(user="postgres",
-                                          password="Incorrect-10",
+            connection = psycopg2.connect(user="<example_username>",
+                                          password="<example_password>",
                                           host="localhost",
-                                          port="5432",
-                                          database="postgres")
+                                          port="<port_number>",
+                                          database="x5gon")
             cursor = connection.cursor()
 
             postgres_oer_id_query = f"""SELECT material_id FROM urls WHERE url = '{url}';"""
@@ -78,11 +78,11 @@ class Scraper(YoutubeMaster):
 
     def get_url_by_oer_id(self, oer_id):
         try:
-            connection = psycopg2.connect(user="postgres",
-                                          password="Incorrect-10",
+            connection = psycopg2.connect(user="<example_username>",
+                                          password="<example_password>",
                                           host="localhost",
-                                          port="5432",
-                                          database="postgres")
+                                          port="<port_number>",
+                                          database="x5gon")
             cursor = connection.cursor()
 
             postgres_url_query = f"""SELECT url from urls WHERE material_id = '{oer_id}';"""
@@ -102,11 +102,11 @@ class Scraper(YoutubeMaster):
 
     def get_all_existing_oer_urls(self):
         try:
-            connection = psycopg2.connect(user="postgres",
-                                          password="Incorrect-10",
+            connection = psycopg2.connect(user="<example_username>",
+                                          password="<example_password>",
                                           host="localhost",
-                                          port="5432",
-                                          database="postgres")
+                                          port="<port_number>",
+                                          database="x5gon")
             cursor = connection.cursor()
 
             postgres_url_query = """SELECT url from urls WHERE provider_id = 73;"""
@@ -125,11 +125,11 @@ class Scraper(YoutubeMaster):
 
     def ingest_material_video(self, video_metadata):
         try:
-            connection = psycopg2.connect(user="postgres",
-                                          password="Incorrect-10",
+            connection = psycopg2.connect(user="<example_username>",
+                                          password="<example_password>",
                                           host="localhost",
-                                          port="5432",
-                                          database="postgres")
+                                          port="<port_number>",
+                                          database="x5gon")
             cursor = connection.cursor()
 
             title_match = self.find_title_match(cursor, 'oer_materials', video_metadata[self.title])
@@ -150,24 +150,28 @@ class Scraper(YoutubeMaster):
             transcript_dict = {'transcript': video_metadata[self.transcripts]}
             formatted_transcript = json.dumps(transcript_dict)
 
-            if title_match is None and video_metadata['deleted'] is False:
+            print("LICENCE: ", self.youtube_video.check_license(video_metadata))
+
+            if title_match is None and video_metadata['deleted'] is False and self.youtube_video.check_license(video_metadata) != "Private Video":
                 postgres_insert_query = """ INSERT INTO oer_materials (id, title, description, language, 
                 creation_date, type, mimetype, license) 
                 VALUES (%s ,%s , %s , %s , %s, %s, %s, %s)"""
 
                 record_values = (str(new_oer_id), video_metadata[self.title], video_metadata[self.description],
-                                 video_metadata[self.default_audio_language], video_metadata[self.published_at], 'mp4', 'video/mp4',
-                                 'http://creativecommons.org/licenses/by-nc-nd/3.0/')
+                                 video_metadata[self.default_audio_language], video_metadata[self.published_at],
+                                 'mp4', 'video/mp4','http://creativecommons.org/licenses/by-nc-nd/3.0/')
 
                 cursor.execute(postgres_insert_query, record_values)
 
                 postgres_urls_insert_query = """INSERT INTO urls (id, url, provider_id, material_id) 
                 VALUES (%s, %s, %s, %s)"""
 
-                record_values_urls = (str(new_url_id), str(video_metadata[self.video_url]), str(provider_id), str(new_oer_id))
+                record_values_urls = (str(new_url_id), str(video_metadata[self.video_url]),
+                                      str(provider_id), str(new_oer_id))
                 cursor.execute(postgres_urls_insert_query, record_values_urls)
 
-                postgres_contents_insert_query = """INSERT INTO material_contents (language, type, extension, value, material_id, id)
+                postgres_contents_insert_query = """INSERT INTO material_contents (language, type, extension, value, 
+                material_id, id)
                 VALUES (%s, %s, %s, %s, %s, %s)"""
 
                 record_values_contents = (video_metadata[self.default_audio_language], 'mp4', 'mp4', formatted_transcript,
@@ -188,66 +192,13 @@ class Scraper(YoutubeMaster):
                 connection.close()
                 print("Connection closed")
 
-    def ingest_material_playlist(self, video_metadata):
-        try:
-            connection = psycopg2.connect(user="postgres",
-                                          password="Incorrect-10",
-                                          host="localhost",
-                                          port="5432",
-                                          database="postgres")
-
-            cursor = connection.cursor()
-
-            title_match = self.find_title_match(cursor, 'oer_materials', video_metadata[self.title])
-
-            max_oer_id = self.find_max('oer_materials', 'id', cursor)
-            new_oer_id = int(max_oer_id) + 1
-
-            postgres_provider_id_query = """SELECT id from providers WHERE name = 'YouTube' """
-            cursor.execute(postgres_provider_id_query)
-            provider_id = cursor.fetchone()[0]
-
-            max_url_id = self.find_max('urls', 'id', cursor)
-            new_url_id = int(max_url_id) + 1
-
-            if title_match is None:
-                postgres_insert_query = """INSERT INTO oer_materials (id, title, description, language, 
-                creation_date, type, mimetype, license) 
-                VALUES (%s ,%s , %s , %s , %s, %s, %s, %s)"""
-
-                record_values = (str(new_oer_id), video_metadata[self.title], video_metadata[self.description],
-                                 video_metadata[self.default_audio_language], video_metadata[self.published_at], 'mp4', 'video/mp4',
-                                 'http://creativecommons.org/licenses/by-nc-nd/3.0/')
-
-                cursor.execute(postgres_insert_query, record_values)
-
-                postgres_urls_insert_query = """INSERT INTO urls (id, url, provider_id, material_id) 
-                            VALUES (%s, %s, %s, %s)"""
-
-                record_values_urls = (str(new_url_id), str(video_metadata[self.video_url]), str(provider_id), str(new_oer_id))
-                cursor.execute(postgres_urls_insert_query, record_values_urls)
-
-                connection.commit()
-
-            elif title_match is not None:
-                print(title_match, "already exists")
-
-        except (Exception, psycopg2.Error) as e:
-            print("ERROR", e)
-
-        finally:
-            if connection:
-                cursor.close()
-                connection.close()
-                print("connection closed")
-
     def ingest_series(self, playlist_metadata):
         try:
-            connection = psycopg2.connect(user="postgres",
-                                          password="Incorrect-10",
+            connection = psycopg2.connect(user="<example_username>",
+                                          password="<example_password>",
                                           host="localhost",
-                                          port="5432",
-                                          database="postgres")
+                                          port="<port_number>",
+                                          database="x5gon")
 
             cursor = connection.cursor()
 
@@ -279,11 +230,11 @@ class Scraper(YoutubeMaster):
 
     def ingest_episode(self, video_metadata, episode_number):
         try:
-            connection = psycopg2.connect(user="postgres",
-                                          password="Incorrect-10",
+            connection = psycopg2.connect(user="<example_username>",
+                                          password="<example_password>",
                                           host="localhost",
-                                          port="5432",
-                                          database="postgres")
+                                          port="<port_number>",
+                                          database="x5gon")
             cursor = connection.cursor()
 
             title_match = self.find_title_match(cursor, 'oer_materials', video_metadata[self.title])
@@ -352,13 +303,13 @@ class Scraper(YoutubeMaster):
                 print("Connection closed")
 
     def scrape_playlists(self, channel_id, visited_videos):
-        playlist_ids = self.youtube_playlists.get_all_playlist_ids_by_channel_id(channel_id, self.api_key)
+        playlist_ids = self.youtube_playlists.get_all_playlist_ids_by_channel_id(channel_id)
         materials = []
         playlist_count = 0
         for playlist_id in playlist_ids:
-            video_ids = self.youtube_playlists.get_all_video_ids_in_a_playlist(playlist_id, self.api_key)
+            video_ids = self.youtube_playlists.get_all_video_ids_in_a_playlist(playlist_id)
             if video_ids is not None:
-                playlist_info = self.youtube_playlists.get_playlist_info(playlist_id, self.api_key)
+                playlist_info = self.youtube_playlists.get_playlist_info(playlist_id)
                 episode_number = 1
                 for video_id in video_ids:
                     visited_videos.append(video_id)
@@ -417,24 +368,4 @@ class Scraper(YoutubeMaster):
 
                     video_count += 1
         return materials
-
-
-def main(yt_url):
-    scraper = Scraper()
-    yt_url_info = scraper.youtube_video.get_video_info(scraper.get_video_id(yt_url), scraper.api_key)
-    channel_id = scraper.get_channel_id(yt_url)
-    channel_data = scraper.youtube_channel.get_channel_info(channel_id, scraper.api_key)
-    visited_videos = []
-    scraped_playlist_data = scraper.scrape_playlists(channel_id, visited_videos)
-    #scraped_video_data = scraper.scrape_videos(channel_id, visited_videos)
-    return scraped_playlist_data
-
-
-if __name__ == "__main__":
-    yt_url = input("Enter URL:\n")
-    main(yt_url)
-
-
-
-
 
