@@ -5,7 +5,7 @@ import PieChart from './PieChart';
 import DoubleBarChart from './DoubleBarChart';
 
 import ExpandedBarChart from './ExpandedBarChart';
-import ExpandedPieChart2 from './ExpandedPieChart2';
+import ExpandedPieChart from './ExpandedPieChart';
 import ExpandedDoubleBarChart from './ExpandedDoubleBarChart';
 
 const GeneralStatistics = () => {
@@ -196,7 +196,7 @@ const GeneralStatistics = () => {
             <div onClick = {closeModal} className = "overlay">
                 <div className = "modal-container">
                     <h2 onClick = {closeModal} > + </h2>
-                    <ExpandedPieChart2 data = {materialLanguageData} height = {Height} width = {Width} onChartClick = {handleChartClick} />
+                    <ExpandedPieChart data = {materialLanguageData} height = {Height} width = {Width} onChartClick = {handleChartClick} />
                 </div>
             </div>
             }
@@ -205,7 +205,7 @@ const GeneralStatistics = () => {
             <div onClick = {closeModal} className = "overlay">
                 <div className = "modal-container">
                     <h2 onClick = {closeModal}> + </h2>
-                    <ExpandedPieChart2 data = {videoTypeData} height ={Height} width = {Width} onChartClick = {handleChartClick} />
+                    <ExpandedPieChart data = {videoTypeData} height ={Height} width = {Width} onChartClick = {handleChartClick} />
                 </div>
             </div>
             }
@@ -250,7 +250,7 @@ const GeneralStatistics = () => {
             <div onClick = {closeModal} className = "overlay">
                 <div className = "modal-container">
                     <h2 onClick = {closeModal}> + </h2>
-                    <ExpandedPieChart2 data = {userLanguageData} height = {Height} width = {Width} onChartClick = {handleChartClick} />
+                    <ExpandedPieChart data = {userLanguageData} height = {Height} width = {Width} onChartClick = {handleChartClick} />
                 </div>
             </div>
             }
@@ -274,7 +274,7 @@ const GeneralStatistics = () => {
             <div onClick = {closeModal} className = "overlay">
                 <div className = "modal-container">
                     <h2 onClick = {closeModal}> + </h2>
-                    <ExpandedPieChart2 data = {materialTypeData} height = {Height} width = {Width} onClick = {handleClick} onChartClick = {handleChartClick} />
+                    <ExpandedPieChart data = {materialTypeData} height = {Height} width = {Width} onClick = {handleClick} onChartClick = {handleChartClick} />
                 </div>
             </div>
             }
