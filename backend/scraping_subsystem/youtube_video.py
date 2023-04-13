@@ -10,7 +10,6 @@ class YouTubeVideo(YoutubeMaster):
     def __init__(self):
         YoutubeMaster.__init__(self)
 
-
     def get_transcripts(self, video_id):
         transcripts = []
         try:
@@ -61,10 +60,11 @@ class YouTubeVideo(YoutubeMaster):
 
         try:
             video_data = self.populate_video_metadata(video_id, response)
+            if self.check_license(video_data) == "Private Video":
+                video_data = None
 
         except Exception as e:
             print("ERROR: ", e)
-            print("Suspected Private Video")
             video_data = None
 
         return video_data
