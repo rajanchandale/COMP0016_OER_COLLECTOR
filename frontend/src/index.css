@@ -206,6 +206,10 @@ code {
     border: 3pt solid #63C1BD;
 }
 
+.submit-button-fetching:hover{
+    cursor: wait;
+}
+
 .loading-messages{
     position:fixed;
     top:52.5%;
@@ -250,6 +254,27 @@ code {
     position: absolute;
     top: 45%;
     left: 15%;
+}
+
+.invalid-url-message{
+    height: 30%;
+    width: 50%;
+    position: fixed;
+    top: 52.5%;
+    left: 26%;
+}
+
+.invalid-url-message h3{
+    color: #63C1BD;
+    font-size: 30px;
+    position: absolute;
+    left: 20%;
+}
+
+.invalid-url-svg{
+    position: absolute;
+    top: 25%;
+    left: 10%;
 }
 
 .collapsible-summary-container {
@@ -759,7 +784,7 @@ summary {
 .example-double-bar{
     position:absolute;
     top: 5%;
-    left: -2.5%;
+    left: 0%;
 }
 
 .example-chord{
@@ -800,7 +825,7 @@ summary {
 
 .modal-container h2:hover{
     cursor:pointer;
-    color: DarkSlateGray;
+    color: #63C1BD;
 }
 
 .modal-background{
@@ -1062,6 +1087,35 @@ svg:hover .click-arrow {
     color: #63C1BD;
     font-size: 20px;
 }
+
+.not-found{
+    position: fixed;
+    top: 30%;
+    left: 25%;
+    height: 50%;
+    width: 70%;
+    color: #63C1BD;
+}
+
+.not-found h1{
+    font-size: 40px;
+    position: absolute;
+    top: 20%;
+    left: 12.5%;
+}
+
+.not-found h2{
+    font-size: 30px;
+    position: absolute;
+    top: 45%;
+    left: 32.5%;
+}
+
+.take-me-home{
+    color: #63C1BD;
+}
+
+
 
 
 
