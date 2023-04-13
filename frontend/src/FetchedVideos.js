@@ -4,11 +4,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 const FetchedVideos = () => {
 
     const { oer_id } = useParams();
-    const[videoData, setVideoData] = useState([]);
-    const[isPending, setIsPending] = useState(true);
-    const[isIngesting, setIsIngesting] = useState(false);
-    const[isFetching, setIsFetching] = useState(true);
-    const[processComplete, setProcessComplete] = useState(false)
+    const [videoData, setVideoData] = useState([]);
+    const [isPending, setIsPending] = useState(true);
+    const [isIngesting, setIsIngesting] = useState(false);
+    const [isFetching, setIsFetching] = useState(true);
+    const [processComplete, setProcessComplete] = useState(false)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,16 +22,7 @@ const FetchedVideos = () => {
         }).then(() => {setIsFetching(false);setIsPending(false);}).catch(e => console.log(e.message));
     }, [oer_id]);
 
-    console.log(videoData)
-    console.log(typeof(videoData))
-
-    const deleteMaterial = (event, deleted_data) => {
-        console.log(event);
-        const newData = videoData.filter(video => video[1]['id'] !== deleted_data[1]['id']);
-        setVideoData(newData);
-    }
-
-    const deleteMaterial2 = (event, video) => {
+    const deleteMaterial = (event, video) => {
         setVideoData(
             videoData.map(v => {
                 if (v.id === video.id){
@@ -80,11 +71,11 @@ const FetchedVideos = () => {
                         <div className = "video-description"> <p> <em> {video.description} </em> </p> </div>
                         <div className = "delete-button-container">
                             {!video.deleted ? (
-                                <button onClick={event => deleteMaterial2(event, video)} style = {{transform: "rotate(45deg)"}}>
+                                <button onClick={event => deleteMaterial(event, video)} style = {{transform: "rotate(45deg)"}}>
                                 +
                                 </button>
                             ) : (
-                                <button onClick={event => deleteMaterial2(event, video)}>
+                                <button onClick={event => deleteMaterial(event, video)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50" height="50">
                                       <path d="M15,25 L20,30 L35,15" stroke="green" stroke-width="5" fill="none" />
                                     </svg>
