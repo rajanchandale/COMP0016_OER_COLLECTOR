@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
 const NewMaterial = () => {
-    const[url, setUrl] = useState('');
-    const[isPending, setIsPending] = useState(false);
+    const [url, setUrl] = useState('');
+    const [isPending, setIsPending] = useState(false);
+    const [invalidURL, setInvalidURL] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
-        console.log("handleSubmit")
         e.preventDefault();
         const value = {url};
 
         setIsPending(true);
+        setInvalidURL(false);
 
         fetch('http://localhost:8000/add_materials', {
             method: 'POST',
@@ -21,8 +21,14 @@ const NewMaterial = () => {
         }).then(function(response){
             return response.json();
         }).then(function(data){
-            const oer_id = data.data;
-            navigate(`/add_materials/playlists/${oer_id}`);
+            if(data.data === "Invalid URL"){
+                setIsPending(false);
+                setInvalidURL(true);
+            } else {
+                const oer_id = data.data;
+                navigate(`/add_materials/playlists/${oer_id}`);
+            }
+
         });
     }
 
@@ -30,8 +36,11 @@ const NewMaterial = () => {
         <div className="new-url">
             <form onSubmit={ handleSubmit }>
                 <input type="text" required value = {url} className = "url-input" placeholder = "Enter URL" onChange = {(e) => setUrl(e.target.value)} />
+
                 {!isPending && <button className = "submit-button"> GO </button> }
-                {isPending && <button disabled className = "submit-button-fetching" onClick = {() => console.log("clicked")}> Fetching ... </button>}
+
+                {isPending && <button disabled className = "submit-button-fetching"> Fetching ... </button>}
+
                 {isPending && <div className = "loading-messages">
 
                     <div className = "secure-svg">
@@ -59,6 +68,19 @@ const NewMaterial = () => {
 
                     <h3 className = "resource-licence-message"> Checking Resource Licenses </h3>
                 </div>}
+                {invalidURL &&
+                <div className = "invalid-url-message">
+
+                    <div className = "invalid-url-svg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#63C1BD" class="bi bi-clipboard-x-fill" viewBox="0 0 16 16">
+                            <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z"/>
+                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm4 7.793 1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 1 1 .708-.708L8 9.293Z"/>
+                        </svg>
+                    </div>
+
+                    <h3> The URL You Provided Was Not A Valid YouTube URL </h3>
+                </div>
+                }
             </form>
         </div>
 
