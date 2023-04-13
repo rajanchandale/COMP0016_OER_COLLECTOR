@@ -9,6 +9,7 @@ import NewMaterial from './NewMaterial';
 import FetchedPlaylists from './FetchedPlaylists';
 import FetchedVideos from './FetchedVideos';
 import LicenceTool from './LicenceTool';
+import NotFound from './NotFound';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
                     <Route path = "add_materials/playlists/:oer_id" element = {<FetchedPlaylists />} />
                     <Route path = "add_materials/videos/:oer_id" element = {<FetchedVideos />} />
                     <Route exact path = "/licence-tool" element = {<LicenceTool />} />
+                    <Route path = "*" element = {<NotFound />} />
                 </Routes>
             </div>
         </div>
