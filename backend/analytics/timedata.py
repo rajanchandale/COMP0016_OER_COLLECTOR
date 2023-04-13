@@ -1,13 +1,12 @@
 import datetime
-from datetime import timedelta
 import psycopg2
 import sys
 
 param_dic = {
     "host"      : "localhost",
-    "database"  : "postgres",
-    "user"      : "postgres",
-    "password"  : "Incorrect-10"
+    "database"  : "x5gon",
+    "user"      : "<example_username>",
+    "password"  : "<example_password>"
 }
 def connect(params_dic):
     """ Connect to the PostgreSQL database server """
