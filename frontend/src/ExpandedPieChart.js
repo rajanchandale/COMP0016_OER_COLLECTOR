@@ -1,7 +1,7 @@
 import { useD3 } from './useD3';
 import * as d3 from 'd3';
 
-function ExpandedPieChart2({ data, height, width, onClick, onChartClick }){
+function ExpandedPieChart({ data, height, width, onClick, onChartClick }){
 
     const ref = useD3(
 
@@ -109,4 +109,4 @@ function ExpandedPieChart2({ data, height, width, onClick, onChartClick }){
 
 };
 
-export default ExpandedPieChart2;
+export default ExpandedPieChart;
