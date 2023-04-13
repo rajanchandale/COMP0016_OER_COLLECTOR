@@ -1,11 +1,10 @@
 import psycopg2
 import sys
-from urllib.parse import urlparse
 
 param_dic = {
     "host": "localhost",
-    "database": "postgres",
-    "user": "postgres",
+    "database": "x5gon",
+    "user": "<example_username>",
     "password": "Incorrect-10"
 }
 
