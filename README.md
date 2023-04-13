@@ -196,7 +196,12 @@ The frontend should now be running on
 ```http://localhost:3000/```
 
 ### Back-End Deployment
+
 If you have access to the X5Gon database, replace the placeholders in all python files in the analytics sub-directory for the database login credentials with your own login credentials
+
+You should also add a new record into the 'providers' table in the X5Gon database to allow for correct ingestion of materials. 
+
+You may have to adjust the provider id in the program to match the provider id generated for your new YouTube record. 
 
 If you have an API-Key for the YoutubeAPI v3, replace the placeholder for self.api_key in the youtube_master.py file with your own developer API Key
 
